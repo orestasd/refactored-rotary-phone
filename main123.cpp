@@ -6,164 +6,6 @@ const char LANG_LAIVAS = '*';
 const char LANG_SAUTA = ' ';
 const char LANG_PATAIK = 'X';
 const char LANG_TUSC = '0';
- 
-
-class TusciaLenta : public LaivasPagr
-{
-public:
-    TusciaLenta()
-    {
-        ilgis=1;
-    }
-    string getLaivoTipas()
-    {
-        return "tusciasLangelis";
-    }
-    bool kurSauti(int eile, int stulpelis)
-    {
-        return false;
-    }
-    bool arNuskendo()
-    {
-        return false;
-    }
-    char toString()
-    {
-        return '.';
-    }
-};
-
-class LaivasPagr
-{
-protected:
-    int ilgis, LaivoEile, LaivoStulp;
-    bool horizontaliai = true;
-    bool pataikymas = true;
-public:
-    virtual char toString() = 0;
-    int getIlgis()
-    {
-        return ilgis;
-    }
-    bool arHorizontaliai()
-    {
-        return horizontaliai;
-    }
-    int getLaivoEile()
-    {
-        return LaivoEile;
-    }
-    int getLaivoStulp()
-    {
-        return LaivoStulp;
-    }
-    void nustatytiLaivoEile(int eile)
-    {
-        LaivoEile = eile;
-    }
-    void nustatytiLaivoStulpeli(int stulpelis)
-    {
-        LaivoStulp = stulpelis;
-    }
-    void nustatytiHorizontaluma(bool horizontalus)
-    {
-        horizontaliai = horizontalus;
-    }
-    string getLaivoTipas()
-    {
-        return string();
-    }
-    bool arGalimaPadetiLaiva(int eile, int stulpelis, bool horizontalus, ZaidimoLenta *ZaidimoLenta)
-    {
-        if (horizontalus)
-        {
-            if (stulpelis + getIlgis() > 10)
-            {
-                return false;
-            }
-            for (int stulpelis1 = stulpelis - 1; stulpelis1 <= stulpelis + getIlgis(); stulpelis1++)
-            {
-                if (ZaidimoLenta->yraUzimtas(eile - 1, stulpelis1) || ZaidimoLenta->yraUzimtas(eile, stulpelis1) || ZaidimoLenta->yraUzimtas(eile + 1, stulpelis1))
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-        else
-        {
-            if (eile + getIlgis() > 10)
-            {
-                return false;
-            }
-            for (int eile1 = eile - 1; eile1 <= eile + getIlgis(); eile1++)
-            {
-                if (ZaidimoLenta->yraUzimtas(eile1, stulpelis - 1) || ZaidimoLenta->yraUzimtas(eile1, stulpelis) || ZaidimoLenta->yraUzimtas(eile1, stulpelis + 1))
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-        return false;
-    }
-    void kurPadetiLaiva(int eile, int stulpelis, bool horizontalus, ZaidimoLenta *ZaidimoLenta)
-    {
-        nustatytiLaivoEile(eile); 
-        nustatytiLaivoStulpeli(stulpelis);
-        nustatytiHorizontaluma(horizontalus);
-        LaivasPagr*** laivasPagr = ZaidimoLenta->getLaivus();
-        if (horizontalus)
-        {
-            for (int i = stulpelis; i < stulpelis + getIlgis(); i++)
-            {
-                laivasPagr[eile][i] = this;
-            }
-        }
-        else
-        {
-            for (int i = eile; i < eile + getIlgis(); i++)
-            {
-                laivasPagr[i][stulpelis] = this;
-            }
-        }
-    }
-
-    bool laivuSaudymas(int eile, int stulpelis)
-    {
-        return false;
-    }
-
-    bool arNuskendo()
-    {
-        return false;
-    }
-};
-
-class TusciaLenta : public LaivasPagr
-{
-public:
-    TusciaLenta()
-    {
-        ilgis=1;
-    }
-    string getLaivoTipas()
-    {
-        return "tusciasLangelis";
-    }
-    bool kurSauti(int eile, int stulpelis)
-    {
-        return false;
-    }
-    bool arNuskendo()
-    {
-        return false;
-    }
-    char toString()
-    {
-        return '.';
-    }
-};
 
 class ZaidimoLenta
 {
@@ -402,6 +244,113 @@ public:
     }
 };
 
+class LaivasPagr
+{
+protected:
+    int ilgis, LaivoEile, LaivoStulp;
+    bool horizontaliai = true;
+    bool pataikymas = true;
+public:
+    virtual char toString() = 0;
+    int getIlgis()
+    {
+        return ilgis;
+    }
+    bool arHorizontaliai()
+    {
+        return horizontaliai;
+    }
+    int getLaivoEile()
+    {
+        return LaivoEile;
+    }
+    int getLaivoStulp()
+    {
+        return LaivoStulp;
+    }
+    void nustatytiLaivoEile(int eile)
+    {
+        LaivoEile = eile;
+    }
+    void nustatytiLaivoStulpeli(int stulpelis)
+    {
+        LaivoStulp = stulpelis;
+    }
+    void nustatytiHorizontaluma(bool horizontalus)
+    {
+        horizontaliai = horizontalus;
+    }
+    string getLaivoTipas()
+    {
+        return string();
+    }
+    bool arGalimaPadetiLaiva(int eile, int stulpelis, bool horizontalus, ZaidimoLenta *ZaidimoLenta)
+    {
+        if (horizontalus)
+        {
+            if (stulpelis + getIlgis() > 10)
+            {
+                return false;
+            }
+            for (int stulpelis1 = stulpelis - 1; stulpelis1 <= stulpelis + getIlgis(); stulpelis1++)
+            {
+                if (ZaidimoLenta->yraUzimtas(eile - 1, stulpelis1) || ZaidimoLenta->yraUzimtas(eile, stulpelis1) || ZaidimoLenta->yraUzimtas(eile + 1, stulpelis1))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+        else
+        {
+            if (eile + getIlgis() > 10)
+            {
+                return false;
+            }
+            for (int eile1 = eile - 1; eile1 <= eile + getIlgis(); eile1++)
+            {
+                if (ZaidimoLenta->yraUzimtas(eile1, stulpelis - 1) || ZaidimoLenta->yraUzimtas(eile1, stulpelis) || ZaidimoLenta->yraUzimtas(eile1, stulpelis + 1))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+    void kurPadetiLaiva(int eile, int stulpelis, bool horizontalus, ZaidimoLenta *ZaidimoLenta)
+    {
+        nustatytiLaivoEile(eile);
+        nustatytiLaivoStulpeli(stulpelis);
+        nustatytiHorizontaluma(horizontalus);
+        LaivasPagr*** laivasPagr = ZaidimoLenta->getLaivus();
+        if (horizontalus)
+        {
+            for (int i = stulpelis; i < stulpelis + getIlgis(); i++)
+            {
+                laivasPagr[eile][i] = this;
+            }
+        }
+        else
+        {
+            for (int i = eile; i < eile + getIlgis(); i++)
+            {
+                laivasPagr[i][stulpelis] = this;
+            }
+        }
+    }
+
+    bool laivuSaudymas(int eile, int stulpelis)
+    {
+        return false;
+    }
+
+    bool arNuskendo()
+    {
+        return false;
+    }
+};
+
 class Korvete : public LaivasPagr
 {
 public:
@@ -472,6 +421,31 @@ public:
     int getIlgis()
     {
         return this->ilgis;
+    }
+};
+
+class TusciaLenta : public LaivasPagr
+{
+public:
+    TusciaLenta()
+    {
+        ilgis=1;
+    }
+    string getLaivoTipas()
+    {
+        return "tusciasLangelis";
+    }
+    bool kurSauti(int eile, int stulpelis)
+    {
+        return false;
+    }
+    bool arNuskendo()
+    {
+        return false;
+    }
+    char toString()
+    {
+        return '.';
     }
 };
 
